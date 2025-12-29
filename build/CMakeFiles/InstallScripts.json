@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"D:/personal/code/NCIS/build/cmake_install.cmake",
-		"D:/personal/code/NCIS/build/vendor/glfw/cmake_install.cmake",
-		"D:/personal/code/NCIS/build/vendor/glfw/src/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
