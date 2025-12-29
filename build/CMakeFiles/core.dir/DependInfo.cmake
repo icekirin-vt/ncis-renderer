@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "D:/personal/code/NCIS/src/main.c" "CMakeFiles/core.dir/src/main.c.obj" "gcc" "CMakeFiles/core.dir/src/main.c.obj.d"
   "D:/personal/code/NCIS/vendor/glad/glad.c" "CMakeFiles/core.dir/vendor/glad/glad.c.obj" "gcc" "CMakeFiles/core.dir/vendor/glad/glad.c.obj.d"
-  "D:/personal/code/NCIS/src/main.cpp" "CMakeFiles/core.dir/src/main.cpp.obj" "gcc" "CMakeFiles/core.dir/src/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

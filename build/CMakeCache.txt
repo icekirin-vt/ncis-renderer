@@ -208,7 +208,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=NCIS
+CMAKE_PROJECT_NAME:STATIC=core
 
 //Value Computed by CMake
 CMAKE_PROJECT_SPDX_LICENSE:STATIC=
@@ -359,6 +359,15 @@ OPENGL_gl_LIBRARY:STRING=opengl32
 
 //GLU library for win32
 OPENGL_glu_LIBRARY:STRING=glu32
+
+//Value Computed by CMake
+core_BINARY_DIR:STATIC=D:/personal/code/NCIS/build
+
+//Value Computed by CMake
+core_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+core_SOURCE_DIR:STATIC=D:/personal/code/NCIS
 
 
 ########################

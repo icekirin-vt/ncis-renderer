@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/core.dir/src/main.cpp.obj"
-  "CMakeFiles/core.dir/src/main.cpp.obj.d"
+  "CMakeFiles/core.dir/src/main.c.obj"
+  "CMakeFiles/core.dir/src/main.c.obj.d"
   "CMakeFiles/core.dir/vendor/glad/glad.c.obj"
   "CMakeFiles/core.dir/vendor/glad/glad.c.obj.d"
   "D:/personal/code/NCIS/bin/core.exe"
@@ -10,6 +10,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang C CXX)
+foreach(lang C)
   include(CMakeFiles/core.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()
