@@ -10,7 +10,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory("vendor/glfw")
-
+add_subdirectory("vendor/cglm")
 
 # TODO: replace globs with individual filenames
 
@@ -22,7 +22,6 @@ target_sources(core PRIVATE
 target_include_directories(core PRIVATE "src/include")
 
 
-target_include_directories(core PRIVATE "vendor/glad/")
-target_include_directories(core PRIVATE "vendor/glfw/include")
+target_include_directories(core PRIVATE "vendor/glad/" "vendor/glfw/include" "vendor/cglm/include")
 
-target_link_libraries(core glfw)
+target_link_libraries(core glfw cglm)
