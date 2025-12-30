@@ -4,10 +4,10 @@
 #include <string.h>
 
 //returns first character pointer, allocated in memory for its lenght
-char *load_shadersource(char path[]){
+void *FWLoad(char path[]){
 		FILE *fptr=fopen(path, "rb");
 		if(!fptr) {
-				printf("error loading shader at %s\n",path);
+				printf("error loading file at %s\n",path);
 				return NULL;
 		}
 		
@@ -17,7 +17,7 @@ char *load_shadersource(char path[]){
 		rewind(fptr);
 
 
-		if(size<10)  return NULL; //10 is safe size for too little of file to be valid shader, and yet not 0 in case of stray whitespaces etc
+		if(size<1)  return NULL; //1 is safe size for too little of file to be valid shader, and yet not 0 in case of stray whitespaces etc
 								  //
 		char *stringStorage=	malloc(	(size+1)	*	sizeof(char)	); //allocate size+1 for nullterm
 		size_t bytesRead = 		fread(	stringStorage, 1, size, fptr	); //read full file and store size for check, close file right after;
