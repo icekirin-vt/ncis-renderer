@@ -12,8 +12,7 @@ int main(){
 		if(!window) return -1;
 		
 
-		char *fragSource=FWload("shaders/basic.vert");	
-		free((void*) fragSource);
+			
 
 		renderInit(window);
 		FWloadOBJ("assets/tiltTrig.obj");
