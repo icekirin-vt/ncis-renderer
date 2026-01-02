@@ -59,13 +59,13 @@ void *FWload(char path[]){
 
 
 GLuint FWconstructShader(GLenum shaderType, char shaderSource[]){
-		GLuint shader= glCreateShader(shaderType);
-		glShaderSource(shader,1,(const char* const*) shaderSource, NULL);
+		GLuint shader= 	glCreateShader( shaderType );
+		glShaderSource(	shader,	1,(const char* const*) shaderSource, NULL);
 		glCompileShader(shader);
 
 		int success;
 		char infolog[1024];
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		glGetShaderiv(	shader, GL_COMPILE_STATUS, &success);
 		if( !success ){
 				glGetShaderInfoLog(shader, 1024, NULL, infolog);
 				printf(" ERROR COMPILING SHADER: \n%s\n",infolog);
@@ -117,79 +117,117 @@ size_t FWgetLineCount(char string[]){
 
 
 
+size_t getMentionCount(char* string, char* subj){	
+		size_t subjCounter=0;
+		char* result=string;
+		while((result=strstr(result,subj))!=NULL){
+				result=result+strlen(subj);
+				subjCounter++;
+		}
+		return subjCounter;
+		
+}
+
+
 
 int FWloadOBJ(char path[]){
-		char *objSource=FWload(path);
-		if(objSource==NULL){
+		char *ObjSource=FWload(path);
+		if(ObjSource==NULL){
 				printf("INVALID OBJ FILE, FAILURE TO READ\n");
 				return -1;
 		}
 	
-		printf("load start\n\n");
-		char* lineStart=objSource;
-		char* lineEnd=strchr(objSource, '\n'); //gets pointer to EXACTLY newLine break
-		size_t lineLenght;
+		char* 	LineStart=		ObjSource;
+		char* 	LineEnd=		strchr(ObjSource, '\n'); //gets pointer to EXACTLY newLine break
+		size_t 	LineLenght;
 		
-		size_t lines=FWgetLineCount(objSource);
-		printf("Total lines :%d\n",lines);
+		size_t Lines=		FWgetLineCount(ObjSource);
 		
+		size_t VertCount=	getMentionCount(ObjSource,"v ");
+		size_t NormCount=	getMentionCount(ObjSource,"vn ");
+		size_t UVCount=		getMentionCount(ObjSource,"vt ");
+		size_t FaceCount=	getMentionCount(ObjSource,"f ");
+		
+		vec3 Vertecies[VertCount];
+		vec3 Normals[NormCount];
+		vec2 UVCoords[UVCount];
+		char Faces[FaceCount];
 
+		size_t VertInd	=0;
+		size_t NormInd	=0;
+		size_t UVInd	=0;
+		size_t FaceInd	=0;
+		
 		while(true){
-				lineLenght=lineEnd-lineStart;
-				char* currentLine=strndup(lineStart,lineLenght);
-				//printf("current line: |%s|\n",currentLine);
-
-				char* tokenized=strtok(currentLine, " ");
+				LineLenght=LineEnd-LineStart;
 				size_t counter=-2;
-				int isVec3=0;
-				int isVec2=0;
+				char* currentLine=strndup(LineStart,LineLenght);
+				char* tokenized=strtok(currentLine, " ");
+				int isVert3	=0;
+				int isNorm3	=0;
+				int isVec2	=0;
+				int isString=0;
+
 				vec3 tmpVec3;
 				vec2 tmpVec2;
+				char* tmpFace="";
+
 				glm_vec2_zero(tmpVec2);
 				glm_vec3_zero(tmpVec3);
+
 				while(tokenized){
 						counter++;
-						if( (strcmp(tokenized,"v")==0) ||  (strcmp(tokenized,"vn")==0) ) {
-								isVec3=1;
-						};	
-					
+						if(strcmp(tokenized,"v")==0) {
+								isVert3=1;
+						};
+						if(strcmp(tokenized,"vn")==0){
+								isNorm3=1;
+						}
 						if( (strcmp(tokenized,"vt")==0)) {
 								isVec2=1;
 						};	
-
-
-
+						if( (strcmp(tokenized,"f ")==0)){
+								isString=1;								
+						}
 						
-						printf("v:%d  c:%d |%s",isVec3,counter,&tokenized[0]);
-						if (isVec3==1 && counter>=0 && counter<3){
+						if ((isVert3==1 || isNorm3==1) && counter>=0 && counter<3){
 								tmpVec3[counter]=strtof(tokenized, NULL);
-								//printf(" vector member %d ",counter);
 						}
 						if (isVec2==1 && counter>=0 && counter<2){
 								tmpVec2[counter]=strtof(tokenized, NULL);
-								//printf(" vector member %d ",counter);
+						}
+						if (isString==1 && counter>=0 && counter<4){
+								tmpVec2[counter]=strtof(tokenized, NULL);
 						}
 
-						if(counter==2 && isVec3==1)
-								printf("   vec3:%f,%f,%f \n",tmpVec3[0],tmpVec3[1],tmpVec3[2]);
-						else{
-								if(counter==1 && isVec2==1)
-										printf("   vec2:%f,%f    \n",tmpVec2[0],tmpVec2[1]);
-								else printf(" \n");
+
+						
+						if( isVec2==1 && counter==1){
+								
+								UVCoords[UVInd++]		=tmpVec2;
 						}
-												
+						if( isVert3==1 && counter==2){
+								Vertecies[VertInd++]	=tmpVec3;
+						}
+						if( isNorm3==1 && counter==2){
+								Normals[NormInd++]		=tmpVec3;
+						}
+						if( isString==1 && counter==2){
+								//Faces[FaceInd++]=   //TODO: Face saving
+						}
 
 						tokenized=strtok(NULL," ");
 				}
 
-				lineStart=lineEnd+1;
-				lineEnd=strchr(lineEnd+1,'\n');	
-				isVec3=0;
-				isVec2=0;
-				if(lineEnd==NULL)
+				LineStart=LineEnd+1;
+				LineEnd=strchr(LineEnd+1,'\n');	
+				isVert3	=0;
+				isVec2	=0;
+				isString=0;
+				if(LineEnd==NULL)
 						break;
 		}
-		free((void*) objSource);
+		free((void*) ObjSource);
 		return 0;
 
 }
