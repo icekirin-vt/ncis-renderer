@@ -140,25 +140,52 @@ int FWloadOBJ(char path[]){
 				//printf("current line: |%s|\n",currentLine);
 
 				char* tokenized=strtok(currentLine, " ");
-				size_t counter=0;
-				int isVector=0;
+				size_t counter=-2;
+				int isVec3=0;
+				int isVec2=0;
+				vec3 tmpVec3;
+				vec2 tmpVec2;
+				glm_vec2_zero(tmpVec2);
+				glm_vec3_zero(tmpVec3);
 				while(tokenized){
-						puts(&tokenized[0]);
-						if((tokenized[0]=='v') && (isalpha(tokenized[0]))) {
-								isVector=1;
-						}
-						if((tokenized[0]!='v') && (isalpha(tokenized[0]))) {
-								isVector=0;
-						}
+						counter++;
+						if( (strcmp(tokenized,"v")==0) ||  (strcmp(tokenized,"vn")==0) ) {
+								isVec3=1;
+						};	
+					
+						if( (strcmp(tokenized,"vt")==0)) {
+								isVec2=1;
+						};	
+
+
 
 						
-						if(isVector==1) ++counter;
-						printf(" is Vector: %d\n",isVector);
+						printf("v:%d  c:%d |%s",isVec3,counter,&tokenized[0]);
+						if (isVec3==1 && counter>=0 && counter<3){
+								tmpVec3[counter]=strtof(tokenized, NULL);
+								//printf(" vector member %d ",counter);
+						}
+						if (isVec2==1 && counter>=0 && counter<2){
+								tmpVec2[counter]=strtof(tokenized, NULL);
+								//printf(" vector member %d ",counter);
+						}
+
+						if(counter==2 && isVec3==1)
+								printf("   vec3:%f,%f,%f \n",tmpVec3[0],tmpVec3[1],tmpVec3[2]);
+						else{
+								if(counter==1 && isVec2==1)
+										printf("   vec2:%f,%f    \n",tmpVec2[0],tmpVec2[1]);
+								else printf(" \n");
+						}
+												
+
 						tokenized=strtok(NULL," ");
 				}
 
 				lineStart=lineEnd+1;
 				lineEnd=strchr(lineEnd+1,'\n');	
+				isVec3=0;
+				isVec2=0;
 				if(lineEnd==NULL)
 						break;
 		}
