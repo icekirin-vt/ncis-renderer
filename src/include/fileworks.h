@@ -128,7 +128,35 @@ size_t getMentionCount(char* string, char* subj){
 		
 }
 
+typedef struct {
+		char memberContents[5];
 
+		size_t vertexID;
+		size_t uvCoordID;
+		size_t normalID;
+
+		bool isNormal;
+		int lackingUnit;
+}faceMemberInfo;
+
+faceMemberInfo parseTokenString(char token[]){
+		faceMemberInfo buffer;
+		strncpy(buffer.memberContents,token,5);
+		if(strlen(token)==5){
+				buffer.isNormal=true;
+				buffer.lackingUnit=-1;
+		} else {
+				buffer.isNormal=false;
+				int missingCount=(5-strlen(token))-2; //two slashes are constant, 5 char max per member
+				
+		}
+		buffer.vertexID=0;
+		buffer.uvCoordID=0;
+		buffer.normalID=0;
+		
+		return buffer;
+
+}
 
 int FWloadOBJ(char path[]){
 		char *ObjSource=FWload(path);
@@ -151,7 +179,7 @@ int FWloadOBJ(char path[]){
 		vec3 Vertecies[VertCount];
 		vec3 Normals[NormCount];
 		vec2 UVCoords[UVCount];
-		char Faces[FaceCount];
+		faceMemberInfo Faces[FaceCount];
 
 		size_t VertInd	=0;
 		size_t NormInd	=0;
@@ -162,7 +190,18 @@ int FWloadOBJ(char path[]){
 				LineLenght=LineEnd-LineStart;
 				size_t counter=-2;
 				char* currentLine=strndup(LineStart,LineLenght);
-				char* tokenized=strtok(currentLine, " ");
+				char trashedLineCopy[strlen(currentLine)];
+				strcpy(trashedLineCopy,currentLine);
+				char* tokenized=strtok(trashedLineCopy, " ");
+				if( currentLine[0]=='#'){
+						printf("comment line skipped : %s\n",currentLine);
+						LineStart=LineEnd+1;
+						LineEnd=strchr(LineEnd+1,'\n');	
+						if(LineEnd==NULL)
+								break;
+
+						continue;
+				}
 				int isVert3	=0;
 				int isNorm3	=0;
 				int isVec2	=0;
@@ -179,17 +218,18 @@ int FWloadOBJ(char path[]){
 						counter++;
 						if(strcmp(tokenized,"v")==0) {
 								isVert3=1;
-						};
+						}
 						if(strcmp(tokenized,"vn")==0){
 								isNorm3=1;
 						}
 						if( (strcmp(tokenized,"vt")==0)) {
 								isVec2=1;
-						};	
-						if( (strcmp(tokenized,"f ")==0)){
+						}	
+						if( (strcmp(tokenized,"f")==0)){
 								isString=1;								
 						}
 						
+						printf("v:%d n:%d s: %d   |%s ", isVert3, isNorm3, isString, tokenized);
 						if ((isVert3==1 || isNorm3==1) && counter>=0 && counter<3){
 								tmpVec3[counter]=strtof(tokenized, NULL);
 						}
@@ -197,23 +237,30 @@ int FWloadOBJ(char path[]){
 								tmpVec2[counter]=strtof(tokenized, NULL);
 						}
 						if (isString==1 && counter>=0 && counter<4){
-								tmpVec2[counter]=strtof(tokenized, NULL);
+								printf(" face token : %d", parseTokenString(tokenized).isNormal);
 						}
-
+						
+						printf("\n");
 
 						
 						if( isVec2==1 && counter==1){
 								
-								UVCoords[UVInd++]		=tmpVec2;
+								UVCoords[UVInd++][0]=tmpVec2[0];
+								UVCoords[UVInd++][1]=tmpVec2[1];
+								UVCoords[UVInd++][2]=tmpVec2[2];
 						}
 						if( isVert3==1 && counter==2){
-								Vertecies[VertInd++]	=tmpVec3;
+								Vertecies[VertInd++][0]=tmpVec3[0];
+								Vertecies[VertInd++][1]=tmpVec3[1];
+								Vertecies[VertInd++][2]=tmpVec3[2];
 						}
 						if( isNorm3==1 && counter==2){
-								Normals[NormInd++]		=tmpVec3;
+								Normals[NormInd++][0]=tmpVec3[0];
+								Normals[NormInd++][1]=tmpVec3[1];
+								Normals[NormInd++][2]=tmpVec3[2];
 						}
 						if( isString==1 && counter==2){
-								//Faces[FaceInd++]=   //TODO: Face saving
+							//	Faces[FaceInd++]=currentLine;//TODO: Face saving
 						}
 
 						tokenized=strtok(NULL," ");

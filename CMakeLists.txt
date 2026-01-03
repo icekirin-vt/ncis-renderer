@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 4.2)
 project(core)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+set(ENABLE_CJSON_TEST Off)
+set(ENABLE_CJSON_UNINSTALL Off)
+
 set(C_STANDARD 23)
 set(EXECUTABLE_OUTPUT_PATH "../bin/")
 
