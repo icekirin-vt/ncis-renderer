@@ -11,8 +11,7 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory("vendor/glfw")
 add_subdirectory("vendor/cglm")
-
-# TODO: replace globs with individual filenames
+add_subdirectory("vendor/cJSON")
 
 add_executable(core)
 target_sources(core PRIVATE 
