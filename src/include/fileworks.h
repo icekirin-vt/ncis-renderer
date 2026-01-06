@@ -59,17 +59,18 @@ void *FWload(char path[]){
 
 
 GLuint FWconstructShader(GLenum shaderType, char shaderSource[]){
-		GLuint shader= 	glCreateShader( shaderType );
-		glShaderSource(	shader,	1,(const char* const*) shaderSource, NULL);
+		unsigned int shader=glCreateShader(shaderType);
+		glShaderSource(	shader,	1, (char const* const*) &shaderSource, NULL);
 		glCompileShader(shader);
-
 		int success;
 		char infolog[1024];
 		glGetShaderiv(	shader, GL_COMPILE_STATUS, &success);
-		if( !success ){
+		if( success ==0){
 				glGetShaderInfoLog(shader, 1024, NULL, infolog);
 				printf(" ERROR COMPILING SHADER: \n%s\n",infolog);
 		}
+
+		return shader;
 
 }
 
